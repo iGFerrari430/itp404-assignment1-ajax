@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Assignment1_Xiaowen_Zhu</title>
+  <link rel = "stylesheet"
+  type = "text/css"
+  href = "style.css" />
+  <script src="purify.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+      function submitForm() {
+        
+        const val = $( "#area" ).val();
+        let Requrl = `https://www.reddit.com/r/${val}.json`;
+        $('#results').html('<div class="load-container load2"><div class="loader">Loading...</div></div>')
+        let promise = $.ajax({
+          type: 'GET',
+          url: Requrl,
+          error: function () {
+            $("#results").html('Opps. this subreddit does not exist');
+          }
+        });
+        
+        promise.then(function(res){
+          console.log(res.data);
+          let html = '';
+          if (res.data.children.length > 0){
+            res.data.children.forEach(function(child) {
+              html += `
+                <h4>${child.data.title}</h4>
+                <p>Score: ${child.data.score}</p>
+                <p>Author: ${child.data.author}</p>
+              `
+            })
+            
+          }else{
+            html += "well, this subreddit exist but has no post"
+          }
+
+          let sanitizedHTML = DOMPurify.sanitize(html);
+          $("#results").html(sanitizedHTML);
+        })
+
+        return false;
+
+
+       
+      }
+  </script>
+</head> 
+<body>
+
+<h3>ITP 404 Assignment 1</h3>
+
+<form onsubmit="return submitForm()">  
+  <label for="inputArea">Search: </label>
+  <input type="text" name="inputArea" id="area">
+  <input type="submit" value="Submit">
+</form>
+
+
+<div id="results"></div>
+
+
+
+</body>
+</html>
