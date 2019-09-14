@@ -28,7 +28,7 @@
           if (res.data.children.length > 0){
             res.data.children.forEach(function(child) {
               html += `
-                <h4>${child.data.title}</h4>
+              <strong><a href="${child.data.url}">${child.data.title}</a></strong>
                 <p>Score: ${child.data.score}</p>
                 <p>Author: ${child.data.author}</p>
               `
